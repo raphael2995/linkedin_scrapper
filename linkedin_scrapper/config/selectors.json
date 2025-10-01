@@ -1,0 +1,152 @@
+{
+  "linkedin": {
+    "locale_default": "fr",
+    "locales": {
+      "fr": {
+        "profile": {
+          "sections": {
+            "education": {
+              "containers": [
+                "section[data-view-name*='education']",
+                "section[aria-label*='Éducation']",
+                "section:has(h2:has-text('Éducation'))"
+              ],
+              "items": [
+                "li.pvs-list__paged-list-item",
+                "li.artdeco-list__item",
+                "div.pvs-entity"
+              ]
+            },
+            "experience": {
+              "containers": [
+                "section[data-view-name*='experience']",
+                "section[aria-label*='Expérience']",
+                "section:has(h2:has-text('Expérience'))"
+              ],
+              "items": [
+                "li.pvs-list__paged-list-item",
+                "li.artdeco-list__item",
+                "div.pvs-entity",
+                "ul.reusable-org-experience__list > li"
+              ]
+            }
+          },
+          "fields": {
+            "title": [
+              "span[aria-hidden='true']:nth-child(1)",
+              "span.mr1.t-bold span:nth-child(1)",
+              "span.t-bold",
+              "div[dir='ltr']"
+            ],
+            "subtitle": [
+              "span.t-normal.t-black--light",
+              "span.t-14.t-normal",
+              "span:has(span.t-14)"
+            ],
+            "meta": [
+              "span.t-12.t-black--light",
+              "span.t-black--light",
+              "span:has-text('–')"
+            ],
+            "description": [
+              "div.inline-show-more-text",
+              "div[data-test-line-clamp-show-more-text]"
+            ]
+          },
+          "headings_regex": {
+            "education": ["formations?", "éducation", "education", "school"],
+            "experience": ["expériences?", "expérience", "experience", "work experience"]
+          },
+          "buttons": {
+            "see_all_education": [
+              "[data-control-name='navigation_index_see_all_education']",
+              "[data-view-name*='education'] a:has-text('Tout afficher')"
+            ],
+            "see_all_experience": [
+              "[data-control-name='navigation_index_see_all_experience']",
+              "[data-view-name*='experience'] a:has-text('Tout afficher')"
+            ]
+          }
+        },
+        "search": {
+          "input": [
+            "input[aria-label='Recherche']",
+            "input[placeholder*='Recherch']"
+          ],
+          "result_profile_link": [
+            "li.reusable-search__result-container a.app-aware-link[href^='https://www.linkedin.com/in/']",
+            "div.entity-result a.app-aware-link[href^='https://www.linkedin.com/in/']",
+            "a[href^='https://www.linkedin.com/in/']"
+          ]
+        }
+      },
+      "en": {
+        "profile": {
+          "sections": {
+            "education": {
+              "containers": [
+                "section[data-view-name*='education']",
+                "section[aria-label*='Education']",
+                "section:has(h2:has-text('Education'))"
+              ],
+              "items": ["li.pvs-list__paged-list-item", "li.artdeco-list__item", "div.pvs-entity"]
+            },
+            "experience": {
+              "containers": [
+                "section[data-view-name*='experience']",
+                "section[aria-label*='Experience']",
+                "section:has(h2:has-text('Experience'))"
+              ],
+              "items": ["li.pvs-list__paged-list-item", "li.artdeco-list__item", "div.pvs-entity", "ul.reusable-org-experience__list > li"]
+            }
+          },
+          "fields": {
+            "title": ["span[aria-hidden='true']:nth-child(1)", "span.mr1.t-bold span:nth-child(1)", "span.t-bold", "div[dir='ltr']"],
+            "subtitle": ["span.t-normal.t-black--light", "span.t-14.t-normal", "span:has(span.t-14)"],
+            "meta": ["span.t-12.t-black--light", "span.t-black--light", "span:has-text('–')"],
+            "description": ["div.inline-show-more-text", "div[data-test-line-clamp-show-more-text]"]
+          },
+          "headings_regex": {
+            "education": ["education", "school"],
+            "experience": ["experience", "work experience"]
+          },
+          "buttons": {
+            "see_all_education": [
+              "[data-control-name='navigation_index_see_all_education']",
+              "[data-view-name*='education'] a:has-text('See all')"
+            ],
+            "see_all_experience": [
+              "[data-control-name='navigation_index_see_all_experience']",
+              "[data-view-name*='experience'] a:has-text('See all')"
+            ]
+          }
+        },
+        "search": {
+          "input": ["input[aria-label='Search']", "input[placeholder*='Search']"],
+          "result_profile_link": [
+            "li.reusable-search__result-container a.app-aware-link[href^='https://www.linkedin.com/in/']",
+            "div.entity-result a.app-aware-link[href^='https://www.linkedin.com/in/']",
+            "a[href^='https://www.linkedin.com/in/']"
+          ]
+        }
+      }
+    }
+  },
+  "google": {
+    "search": {
+      "input": [
+        "textarea[name='q']",
+        "input[name='q']"
+      ],
+      "results_links": [
+        "a h3", 
+        "a[href^='http']:has(h3)"
+      ],
+      "next_page": [
+        "a#pnnext", 
+        "a[aria-label='Next']",
+        "a[aria-label='Suivant']"
+      ]
+    }
+  }
+}

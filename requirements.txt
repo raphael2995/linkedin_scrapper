@@ -1,0 +1,11 @@
+# Runtime dependencies for LinkedIn 3-step scraper
+pandas>=2.2
+openpyxl>=3.1
+pydantic>=2.7
+pydantic-settings>=2.3
+playwright>=1.45
+tqdm>=4.66
+python-dotenv>=1.0
+rich>=13.7
+beautifulsoup4>=4.12
+lxml>=4.9

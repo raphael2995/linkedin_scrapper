@@ -1,0 +1,111 @@
+# ----------------
+# Python / Build
+# ----------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.build/
+dist/
+*.egg-info/
+
+# ----------------
+# Virtual envs
+# ----------------
+.venv/
+venv/
+env/
+
+# ----------------
+# IDE / OS
+# ----------------
+.vscode/
+.idea/
+.DS_Store
+
+# ----------------
+# Jupyter
+# ----------------
+.ipynb_checkpoints/
+
+# ----------------
+# Logs & temp
+# ----------------
+*.log
+logs/
+*.tmp
+*.bak
+*.swp
+.ruff_cache/
+.pytest_cache/
+
+# ----------------
+# Data (outputs & artefacts) – on CONSERVE inputs/
+# ----------------
+# Racine
+/data/outputs/
+/data/reporting/
+/data/**/step1/
+/data/**/step2_profiles/
+/data/**/logs/
+/data/**/*.jsonl
+/data/**/*.har
+/data/**/*.db
+/data/**/*.sqlite
+
+# Package (si utilisé en fallback)
+linkedin_scrapper/data/outputs/
+linkedin_scrapper/data/reporting/
+linkedin_scrapper/data/**/step1/
+linkedin_scrapper/data/**/step2_profiles/
+linkedin_scrapper/data/**/logs/
+linkedin_scrapper/data/**/*.jsonl
+linkedin_scrapper/data/**/*.har
+linkedin_scrapper/data/**/*.db
+linkedin_scrapper/data/**/*.sqlite
+
+# On GARDE les dossiers inputs (avec .gitkeep)
+!data/inputs/
+!linkedin_scrapper/data/inputs/
+
+# Optionnel : ignorer les CSV d’entrée réels mais garder un exemple
+data/inputs/*.csv
+!data/inputs/*.example.csv
+linkedin_scrapper/data/inputs/*.csv
+!linkedin_scrapper/data/inputs/*.example.csv
+
+# ----------------
+# Playwright / navigateur
+# ----------------
+cookies.json
+cookies/
+session_cookies*
+user_data/
+user-data/
+Downloads/
+chrome_profile/
+Code Cache/
+User Data/
+Default/
+Profile*/
+Cache/
+GPUCache/
+*.har
+
+# ----------------
+# Secrets
+# ----------------
+.env
+.env.*
+*.pem
+*.crt
+*.key
+linkedin_scrapper/config/linkedin_storage.json
+
+# ----------------
+# Drivers
+# ----------------
+chromedriver*
+geckodriver*
+msedgedriver*
