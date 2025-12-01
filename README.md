@@ -1,4 +1,4 @@
-# LinkedIn Scraper — Guide complet & clair (client-ready)
+# LinkedIn Scraper — Guide complet & clair
 
 Ce README explique **comment utiliser** la pipeline, **quoi configurer**, **comment relancer** chaque étape, et **comment mettre à jour les sélecteurs** quand l’HTML de Google/LinkedIn change.  
 Tout est aligné avec **ta commande** :
