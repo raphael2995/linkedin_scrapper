@@ -1,33 +1,22 @@
-[build-system]
-requires = ["setuptools>=68", "wheel"]
-build-backend = "setuptools.build_meta"
-
 [project]
-name = "linkedin-scrapper"
-version = "0.1.0"
-description = "LinkedIn scraper pipeline (URLs finder, scrape, transform, export)."
+name = "linkedin-scraper"
+version = "1.0.0"
+description = "Pipeline complet pour scraper LinkedIn de manière furtive, extraire les expériences, enrichir les données et produire un reporting professionnel."
+authors = [{ name = "Raphaël" }]
 readme = "README.md"
 requires-python = ">=3.10"
-license = "MIT"
-authors = [{ name = "Raphael", email = "you@example.com" }]
-keywords = ["linkedin", "scraping", "playwright", "automation"]
 
 dependencies = [
-  "pydantic-settings>=2.2",
-  "playwright>=1.46",
-  "pandas>=2.2",
-  "openpyxl>=3.1",
-  "python-dotenv>=1.0",
+    "pandas",
+    "playwright",
+    "pydantic",
+    "openpyxl",
+    "beautifulsoup4",
+    "lxml",
+    "tqdm",
+    "python-dateutil",
 ]
 
-[tool.setuptools.packages.find]
-include = ["linkedin_scrapper*"]
-
-[tool.setuptools.package-data]
-linkedin_scrapper = [
-  "stealth.min.js",
-  "config/*",
-  "config/**/*",
-  "data/*",
-  "data/**/*",
-]
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

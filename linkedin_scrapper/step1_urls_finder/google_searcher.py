@@ -1,6 +1,6 @@
 ﻿# -*- coding: utf-8 -*-
 """
-Recherche Google -> première URL de résultat (ciblage LinkedIn via la requÃªte).
+Recherche Google -> première URL de résultat (ciblage LinkedIn via la requête).
 
 - Sauvegarde des cookies (Playwright storage_state) pour limiter les frictions.
 - User-Agent persistant entre exécutions (stocké dans config/session_config.json).
@@ -59,10 +59,10 @@ def _results_path(query_mode: int) -> Path:
 # Robustesse / tempos
 MAX_RETRIES        = 3
 RETRY_BASE_DELAY   = 3.0  # secondes
-SHORT_SLEEP_RANGE  = (8, 15)    # sec entre requÃªtes
-LONG_SLEEP_RANGE   = (60, 90)   # sec toutes les 10 requÃªtes
+SHORT_SLEEP_RANGE  = (8, 15)    # sec entre requêtes
+LONG_SLEEP_RANGE   = (60, 90)   # sec toutes les 10 requêtes
 
-# User-Agents possibles (un seul sera â€œfigéâ€ par SESSION_FILE)
+# User-Agents possibles (un seul sera "figé" par SESSION_FILE)
 USER_AGENTS: List[str] = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Safari/605.1.15",
@@ -138,7 +138,7 @@ def _canonicalize_google_result(href: Optional[str]) -> Optional[str]:
         return href
 
 # --------------------------------------------------------------------------
-# Petites aides â€œhumainesâ€
+# Petites aides "humaines"
 # --------------------------------------------------------------------------
 async def _simulate_human_mouse(page) -> None:
     await page.mouse.move(random.randint(100, 400), random.randint(100, 400))
@@ -154,7 +154,7 @@ async def search_google_name(
     keyword: str
 ) -> str | None:
     """
-    Ouvre Google, tape la requÃªte, retourne l'URL du premier résultat.
+    Ouvre Google, tape la requête, retourne l'URL du premier résultat.
 
     query_mode:
         1 -> "site:linkedin.com/in {name} datascientest"
@@ -172,7 +172,7 @@ async def search_google_name(
             proxy=None,  # adapte si tu utilises un proxy
         )
 
-        # (Optionnel) forcer l'UA choisi dans SESSION_FILE (en-tÃªte HTTP)
+        # (Optionnel) forcer l'UA choisi dans SESSION_FILE (en-tête HTTP)
         if isinstance(user_agent, str) and user_agent.strip():
             await context.set_extra_http_headers({"User-Agent": user_agent})
 
@@ -194,7 +194,7 @@ async def search_google_name(
         # 3) Micro-mouvements "humains"
         await _simulate_human_mouse(page)
 
-        # 4) Saisie requÃªte (via sélecteurs externalisés)
+        # 4) Saisie requête (via sélecteurs externalisés)
         input_selectors = sel_list("google", "search", "input")
         box = await _first_visible(page, input_selectors, timeout=DEFAULT_TIMEOUT)
         if not box:
@@ -211,7 +211,7 @@ async def search_google_name(
         else:
             query = f"{name} linkedin"
 
-        # frappe â€œhumaineâ€ dans le locator concret
+        # frappe "humaine" dans le locator concret
         await _type_human_into_locator(page, box, query)
         await page.keyboard.press("Enter")
 
@@ -239,7 +239,7 @@ async def search_google_name(
                 or await page.locator("form#captcha-form").count() > 0
             )
             if captcha:
-                logger.warning("CAPTCHA détecté. Résous-le dans la fenÃªtre (pause).")
+                logger.warning("CAPTCHA détecté. Résous-le dans la fenêtre (pause).")
                 try:
                     input("> Appuie sur Entrée une fois le captcha résolu...")
                 except Exception:
@@ -312,7 +312,7 @@ def _append_row_to_csv(path: Path, row: Dict[str, Any]) -> None:
 
 async def _sleep_human(i: int) -> None:
     if (i % 10) == 0:
-        logger.info("Pause longueâ€¦")
+        logger.info("Pause longue...")
         await asyncio.sleep(random.uniform(*LONG_SLEEP_RANGE))
     else:
         await asyncio.sleep(random.uniform(*SHORT_SLEEP_RANGE))
@@ -330,7 +330,7 @@ async def _retry_search(name: str, keyword: str, user_agent: str, query_mode: in
         except Exception as e:
             attempt += 1
             if attempt >= MAX_RETRIES:
-                logger.error("Ã‰chec pour '%s' après %d tentatives : %s", name, MAX_RETRIES, e, exc_info=True)
+                logger.error("Echec pour '%s' après %d tentatives : %s", name, MAX_RETRIES, e, exc_info=True)
                 return ""
             delay = RETRY_BASE_DELAY * (2 ** (attempt - 1)) + random.uniform(0, 1.0)
             logger.warning("Tentative %d/%d pour '%s' → retry dans ~%.1fs", attempt, MAX_RETRIES, name, delay)
@@ -342,7 +342,7 @@ async def _retry_search(name: str, keyword: str, user_agent: str, query_mode: in
 async def main(query_mode: int, csv_file: str) -> pd.DataFrame:
     """
     Lit `csv_file` (colonnes: 'nom', 'keywords'), lance la recherche Google et
-    renvoie un DataFrame en mémoire. Ã‰crit aussi un CSV incrémental daté.
+    renvoie un DataFrame en mémoire. Ecrit aussi un CSV incrémental daté.
 
     query_mode:
         1 -> site:linkedin.com/in {nom} datascientest
@@ -366,7 +366,7 @@ async def main(query_mode: int, csv_file: str) -> pd.DataFrame:
             prev = pd.read_csv(results_file, dtype="string").fillna("")
             if "nom" in prev.columns:
                 already = set(prev["nom"].astype("string").str.strip())
-                logger.info("%d noms déjà traités Â· reprise activée.", len(already))
+                logger.info("%d noms déjà traités · reprise activée.", len(already))
         except Exception as e:
             logger.warning("Impossible de relire %s pour reprise : %s", results_file, e, exc_info=True)
 
@@ -389,7 +389,7 @@ async def main(query_mode: int, csv_file: str) -> pd.DataFrame:
         try:
             _append_row_to_csv(results_file, rec)
         except Exception as e:
-            logger.warning("Ã‰criture impossible dans %s pour '%s': %s (on continue)", results_file, name, e, exc_info=True)
+            logger.warning("Ecriture impossible dans %s pour '%s': %s (on continue)", results_file, name, e, exc_info=True)
 
         try:
             await _sleep_human(i)

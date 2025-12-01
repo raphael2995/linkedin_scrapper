@@ -6,7 +6,7 @@ from typing import List
 COLUMNS: List[str] = [
     "Nom et Prénom du titulaire",
     "URL du profil",
-    "Qualification d'origine (dernière certification ou diplÃ´me)",
+    "Qualification d'origine (dernière certification ou diplome)",
     "Dernier métier exercé",
     "Nom de l'entreprise si actif occupé",
     "Durée de l'expérience précédente (en années)",

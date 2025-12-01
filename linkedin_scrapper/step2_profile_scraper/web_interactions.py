@@ -1,7 +1,7 @@
 ﻿# step2_profile_scraper/web_interactions.py
 # -*- coding: utf-8 -*-
 """
-Interactions â€œhumainesâ€ de navigation:
+Interactions "humaines" de navigation:
 - frappe simulée
 - scroll progressif
 - simulation de petits mouvements sur la page
@@ -41,7 +41,7 @@ async def _locale_hint(page: Page) -> str:
 async def _first_clickable(scope, selectors, timeout=3000):
     """
     Retourne le premier locator visible + enabled parmi une liste de sélecteurs CSS, sinon None.
-    `scope` peut Ãªtre `page` ou un locator parent.
+    `scope` peut être `page` ou un locator parent.
     """
     for css in selectors or []:
         try:
@@ -93,7 +93,7 @@ async def human_typing(locator, text: str, delay_range: Tuple[int, int] = (70, 2
 
 
 async def slow_scroll(page: Page, steps: int | None = None, delay_range: Tuple[float, float] = (0.3, 1.0)) -> None:
-    """Scroll progressif vers le bas pour charger les sections (simulateur â€œhumainâ€)."""
+    """Scroll progressif vers le bas pour charger les sections (simulateur "humain")."""
     if steps is None:
         steps = random.randint(2, 6)
     for _ in range(steps):
@@ -138,8 +138,8 @@ async def visit_profile(page: Page, url: str, timeout_ms: int = settings.navigat
 
 async def click_section_button(page: Page, section_id: str) -> None:
     """
-    Clique sur un bouton de section â€œVoir toutes les ...â€.
-    `section_id` peut Ãªtre :
+    Clique sur un bouton de section "Voir toutes les ...".
+    `section_id` peut être :
       - "navigation-index-see-all-education" / "navigation-index-see-all-experiences" (compat historique)
       - alias courts: "education" | "experience"
     Les sélecteurs viennent de config/selectors.json :

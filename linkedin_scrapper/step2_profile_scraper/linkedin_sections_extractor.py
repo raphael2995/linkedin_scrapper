@@ -62,7 +62,7 @@ async def _scroll_to_section(page: Page, section: str, locale: str, timeout: int
     """
     Essaie de se placer sur la section demandée (experience|education) en utilisant:
     - ancres / data-view-name / aria-label via sélecteurs externalisés "containers"
-    - headings FR/EN inclus dans les containers définis cÃ´té JSON
+    - headings FR/EN inclus dans les containers définis coté JSON
     """
     containers = sel_list("linkedin", "profile", f"sections.{section}.containers", locale=locale)
     el = await _first_visible(page, containers, timeout=timeout)
@@ -137,8 +137,8 @@ async def _extract_cards(
 # ==================================
 async def extract_formation(page: Page) -> List[Dict[str, str]]:
     """
-    Extrait la section 'Formation' (page principale ou vue â€œvoir plusâ€).
-    Retour: liste d'objets {organisme (école), titre (diplÃ´me), dates, lieu?}
+    Extrait la section 'Formation' (page principale ou vue "voir plus").
+    Retour: liste d'objets {organisme (école), titre (diplome), dates, lieu?}
     """
     results: List[Dict[str, str]] = []
     try:
@@ -150,7 +150,7 @@ async def extract_formation(page: Page) -> List[Dict[str, str]]:
             # Mapping générique → Formation
             results.append({
                 "organisme": r.get("subtitle", ""),      # école / établissement
-                "titre": r.get("title", ""),             # diplÃ´me
+                "titre": r.get("title", ""),             # diplome
                 "dates": r.get("meta", ""),
                 "lieu": r.get("description", ""),        # souvent vide ; laissé pour compat
             })
@@ -160,7 +160,7 @@ async def extract_formation(page: Page) -> List[Dict[str, str]]:
 
 
 # ==================================
-# Expériences â€” aides de nettoyage
+# Expériences -” aides de nettoyage
 # ==================================
 def _clean_experiences(exps: List[Dict[str, str]]) -> List[Dict[str, str]]:
     """
@@ -191,14 +191,14 @@ def _clean_experiences(exps: List[Dict[str, str]]) -> List[Dict[str, str]]:
 
 
 # ==================================
-# Expériences â€” extracteurs
+# Expériences -” extracteurs
 # ==================================
 async def extract_experiences_without_click(page: Page, html_content: Optional[str] = None) -> List[Dict[str, str]]:
     """
-    Extrait les expériences visibles (sans clic â€œvoir plusâ€).
+    Extrait les expériences visibles (sans clic "voir plus").
     Retourne toujours une liste d'objets {titre, entreprise, type contrat, dates, lieu}
     """
-    # html_content est ignoré dans cette version (Playwright direct) â€” conservé pour compat
+    # html_content est ignoré dans cette version (Playwright direct) -” conservé pour compat
     results: List[Dict[str, str]] = []
     try:
         loc = await _locale_hint(page)
@@ -218,8 +218,8 @@ async def extract_experiences_without_click(page: Page, html_content: Optional[s
             m = CONTRACT_REGEX.search(subtitle)
             if m:
                 contract_type = m.group(0)
-                # Retirer le contrat de l'entreprise si collé "Entreprise Â· CDI"
-                subtitle = re.sub(rf"\s*Â·\s*{re.escape(contract_type)}\s*$", "", subtitle, flags=re.I)
+                # Retirer le contrat de l'entreprise si collé "Entreprise · CDI"
+                subtitle = re.sub(rf"\s*·\s*{re.escape(contract_type)}\s*$", "", subtitle, flags=re.I)
 
             results.append({
                 "titre": title,
@@ -237,16 +237,16 @@ async def extract_experiences_without_click(page: Page, html_content: Optional[s
 
 async def extract_experiences_with_click(page: Page, html_content: Optional[str] = None) -> List[Dict[str, str]]:
     """
-    Extrait les expériences après clic â€œVoir toutes les expériencesâ€.
+    Extrait les expériences après clic "Voir toutes les expériences".
     Retourne toujours une liste d'objets {titre, entreprise, type contrat, dates, lieu}
     """
-    # html_content est ignoré (Playwright direct) â€” conservé pour compat
+    # html_content est ignoré (Playwright direct) -” conservé pour compat
     results: List[Dict[str, str]] = []
     try:
         loc = await _locale_hint(page)
 
-        # La page â€œvoir toutes les expériencesâ€ a souvent une structure différente ;
-        # on réutilise le mÃªme extracteur générique en changeant si besoin containers_key
+        # La page "voir toutes les expériences" a souvent une structure différente ;
+        # on réutilise le même extracteur générique en changeant si besoin containers_key
         rows = await _extract_cards(page, loc, section_key="experience")
 
         for r in rows:
@@ -259,7 +259,7 @@ async def extract_experiences_with_click(page: Page, html_content: Optional[str]
             m = CONTRACT_REGEX.search(subtitle)
             if m:
                 contract_type = m.group(0)
-                subtitle = re.sub(rf"\s*Â·\s*{re.escape(contract_type)}\s*$", "", subtitle, flags=re.I)
+                subtitle = re.sub(rf"\s*·\s*{re.escape(contract_type)}\s*$", "", subtitle, flags=re.I)
 
             results.append({
                 "titre": title,

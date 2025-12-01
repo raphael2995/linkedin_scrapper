@@ -10,15 +10,15 @@ Fonctions clés
 - pipeline_test(page, query) -> str|None
     Lance une recherche simple et renvoie la 1Ê³áµ‰ URL de profil.
 - pipeline_batch_df(page, df_in, query_col='query') -> DataFrame
-    Traite un DataFrame de requÃªtes (col. 'query') et renvoie (colonnes d’origine + query + url + status).
+    Traite un DataFrame de requêtes (col. 'query') et renvoie (colonnes d’origine + query + url + status).
 - entry_test(query) -> str|None
     Ouvre un navigateur + session, effectue une recherche unique, ferme.
 - entry_batch(df_in, query_mode) -> DataFrame
-    Ouvre un navigateur + session, construit les requÃªtes selon query_mode (1/3/4), exécute, ferme.
+    Ouvre un navigateur + session, construit les requêtes selon query_mode (1/3/4), exécute, ferme.
 - entry_batch_modes_3_then_4(df_in, cooldown_seconds=(60,120)) -> (df_mode3, df_mode4)
     Ouvre **une seule session/page**, exécute **mode 3** puis **mode 4** avec une **pause longue**
     entre les deux, et renvoie les deux DataFrames de résultats. Idéal si vous voulez enchainer 3 puis 4
-    avec un comportement plus â€œhumainâ€ (moins de reconnects soudains).
+    avec un comportement plus "humain" (moins de reconnects soudains).
 
 Notes
 -----
@@ -31,9 +31,9 @@ Notes
 
 Conseils anti-détection
 -----------------------
-- Des délais aléatoires sont intégrés (frappe â€œhumaineâ€, think-time, cooldown périodique).
+- Des délais aléatoires sont intégrés (frappe "humaine", think-time, cooldown périodique).
 - Pour enchainer deux modes sans rouvrir le navigateur, préférez `entry_batch_modes_3_then_4`
-  qui ajoute un **cooldown (60â€“120 s par défaut)** entre 3 et 4.
+  qui ajoute un **cooldown (60-120 s par défaut)** entre 3 et 4.
 """
 
 from __future__ import annotations
@@ -85,7 +85,7 @@ def _init_guards(page: Page):
     """Attache les compteurs réseau à la page et prépare rate-limit + circuit-breaker."""
     health = HealthCounters()
     attach_response_watchers(page, health)
-    limiter = AsyncRateLimiter(capacity=3, refill_per_sec=3/60.0)  # â‰ˆ 1 action / 20s
+    limiter = AsyncRateLimiter(capacity=3, refill_per_sec=3/60.0)  # ≈ 1 action / 20s
     breaker = CircuitBreaker(open_after_score=3, sleep_when_open_s=1800)  # 30 min
     return health, limiter, breaker
 
@@ -181,7 +181,7 @@ async def submit_search(page: Page, query: str) -> bool:
 
         await box.click()
 
-        # frappe â€œhumaineâ€
+        # frappe "humaine"
         await human_typing(box, query, min_delay=HUMAN_MIN_DELAY, max_delay=HUMAN_MAX_DELAY)
 
         # Valider (double Enter = fallback si la 1Ê³áµ‰ touche ne part pas)
@@ -248,7 +248,7 @@ async def pipeline_test(page: Page, query: str) -> str | None:
         if not ok:
             return None
 
-        # Petit settle puis contrÃ´le captcha/checkpoint
+        # Petit settle puis controle captcha/checkpoint
         await page.wait_for_timeout(random.randint(300, 800))
         if await is_captcha_or_checkpoint(page):
             logger.warning("[WARN] Challenge après submit_search → backoff")
@@ -283,7 +283,7 @@ async def pipeline_batch_df(page: Page, df_in: pd.DataFrame, query_col: str = "q
     """
     health, limiter, breaker = _init_guards(page)
 
-    # 1) Choix de la colonne de requÃªte
+    # 1) Choix de la colonne de requête
     if query_col not in df_in.columns:
         if "name" in df_in.columns:
             query_col = "name"
@@ -316,9 +316,9 @@ async def pipeline_batch_df(page: Page, df_in: pd.DataFrame, query_col: str = "q
     SETTLE_MIN, SETTLE_MAX = 300, 800
 
     for i, row in enumerate(df.itertuples(index=False), start=1):
-        # breaker ouvert → on arrÃªte proprement la boucle (tu peux switcher de compte/proxy ici)
+        # breaker ouvert → on arrête proprement la boucle (tu peux switcher de compte/proxy ici)
         if breaker.is_open:
-            logger.warning("[BREAKER] Pause longue active. ArrÃªt du batch à i=%d.", i)
+            logger.warning("[BREAKER] Pause longue active. Arrêt du batch à i=%d.", i)
             break
 
         q = row.query
@@ -372,7 +372,7 @@ async def pipeline_batch_df(page: Page, df_in: pd.DataFrame, query_col: str = "q
             results.append({"row_id": row_id, "URL": "", "status": f"error:{e}"})
             await page.wait_for_timeout(random.randint(BACKOFF_MIN, BACKOFF_MAX))
 
-        # Micro-pause + jitter entre requÃªtes
+        # Micro-pause + jitter entre requêtes
         await page.wait_for_timeout(MICRO_PAUSE_MS + random.randint(JITTER_MIN, JITTER_MAX))
 
         # Cooldown périodique
@@ -394,7 +394,7 @@ async def pipeline_batch_df(page: Page, df_in: pd.DataFrame, query_col: str = "q
 
 
 # =========================
-# ENTRÃ‰ES ASYNC PAR MODE (avec ouverture/fermeture navigateur)
+# ENTREES ASYNC PAR MODE (avec ouverture/fermeture navigateur)
 # =========================
 
 async def entry_test(query: str) -> str | None:
@@ -417,7 +417,7 @@ async def entry_test(query: str) -> str | None:
 
         page = await context.new_page()
 
-        # âœ… Session LinkedIn
+        #  Session LinkedIn
         logged, page = await ensure_session(
             page,
             storage_state_path=STORAGE_STATE,
@@ -476,7 +476,7 @@ async def entry_batch(
 
         page = await context.new_page()
 
-        # âœ… Session LinkedIn
+        # Session LinkedIn
         logged, page = await ensure_session(
             page,
             storage_state_path=STORAGE_STATE,
@@ -492,7 +492,7 @@ async def entry_batch(
         except Exception:
             pass
 
-        # ---- Prépare les requÃªtes ----
+        # ---- Prépare les requêtes ----
         df = df_in.copy()
         if "nom" not in df.columns:
             raise ValueError("Colonne 'nom' manquante dans df_in.")
@@ -601,7 +601,7 @@ async def _run_batch_on_page(
     breaker: CircuitBreaker,
 ) -> pd.DataFrame:
     """
-    Lance pipeline_batch_df SUR UNE PAGE DÃ‰JÃ€ OUVERTE/CONNECTÃ‰E.
+    Lance pipeline_batch_df SUR UNE PAGE DEJA OUVERTE/CONNECTEE.
     Les garde-fous (health/limiter/breaker) sont déjà initialisés pour cette page.
     """
     df = df_in.copy()
@@ -623,7 +623,7 @@ async def _run_batch_on_page(
 
     df["query"] = df["query"].str.split().str.join(" ")
 
-    # pipeline_batch_df ré-initialise normalement ses garde-fous ; ici on veut réutiliser les mÃªmes.
+    # pipeline_batch_df ré-initialise normalement ses garde-fous ; ici on veut réutiliser les mêmes.
     # Pour rester simple et éviter de dupliquer la logique, on ré-appelle pipeline_batch_df tel quel :
     return await pipeline_batch_df(page, df, query_col="query")
 
@@ -633,8 +633,8 @@ async def entry_batch_modes_3_then_4(
     cooldown_seconds: tuple[int, int] = (60, 120),
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """
-    Exécute **mode 3** puis **mode 4** dans **la mÃªme session**.
-    Pause longue aléatoire entre les deux pour rester â€œhumainâ€.
+    Exécute **mode 3** puis **mode 4** dans **la même session**.
+    Pause longue aléatoire entre les deux pour rester "humain".
     Retourne (df_mode3, df_mode4).
     """
     async with _open_linkedin_session(headless=HEADLESS) as (page, health, limiter, breaker):

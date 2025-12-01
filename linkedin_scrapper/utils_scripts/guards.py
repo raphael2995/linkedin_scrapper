@@ -13,7 +13,7 @@ CAPTCHA_PATTERNS = [
 ]
 CAPTCHA_TEXT = [
     "Are you a human", "Security check", "Vérification de sécurité",
-    "Confirmez que vous n’Ãªtes pas un robot", "Checkpoint"
+    "Confirmez que vous n’êtes pas un robot", "Checkpoint"
 ]
 
 def _contains_any(text: str, patterns: list[str]) -> bool:
@@ -58,7 +58,7 @@ def attach_response_watchers(page: Page, counters: HealthCounters):
 async def backoff_sleep(base: float = 5.0, factor: float = 2.0, attempt: int = 1, cap: float = 900.0):
     # base en secondes, cap ~15 min
     t = min(base * (factor ** max(0, attempt - 1)), cap)
-    # jitter plein (0.5xâ€“1.5x)
+    # jitter plein (0.5x-1.5x)
     t *= random.uniform(0.5, 1.5)
     await asyncio.sleep(t)
 

@@ -168,7 +168,7 @@ def parse_year_range(date_str: str) -> Tuple[Optional[datetime], Optional[dateti
     import re
     if not isinstance(date_str, str):
         return None, None
-    s = date_str.replace("â€“", "-").strip()
+    s = date_str.replace("-", "-").strip()
     years = re.findall(r"\d{4}", s)
     if len(years) == 2:
         return datetime(int(years[0]), 1, 1), datetime(int(years[1]), 12, 1)
@@ -179,12 +179,12 @@ def parse_year_range(date_str: str) -> Tuple[Optional[datetime], Optional[dateti
 
 def extract_date_range(date_str: str) -> Tuple[Optional[datetime], Optional[datetime]]:
     """
-    Extrait (début, fin) depuis 'aout 2021 - aujourd’hui Â· 2 ans', 'janv. 2020 - juin 2022', etc.
+    Extrait (début, fin) depuis 'aout 2021 - aujourd’hui · 2 ans', 'janv. 2020 - juin 2022', etc.
     Retourne des datetime normalisés au 1er du mois.
     """
     if not isinstance(date_str, str):
         return None, None
-    head = date_str.split("Â·")[0].strip()  # on enlève la durée 'Â· 2 ans'
+    head = date_str.split("·")[0].strip()  # on enlève la durée '· 2 ans'
     parts = [p.strip() for p in head.split(" - ")]
     start = parse_french_date(parts[0]) if parts else None
     if len(parts) > 1:
@@ -254,7 +254,7 @@ def last_experience_before(experiences: List[Dict[str, Any]], ref_date: datetime
             continue
 
         if _ym_tuple(start_m) >= _ym_tuple(ref_m):
-            continue  # commence au mÃªme mois ou après la référence → on ignore
+            continue  # commence au même mois ou après la référence → on ignore
 
         cand = {
             "titre": exp.get("titre", ""),
@@ -292,7 +292,7 @@ def last_non_ds_qualification(formations: List[Dict[str, Any]], ref_date: dateti
         if not end_m:
             continue  # on veut une fin connue
         if _ym_tuple(end_m) >= _ym_tuple(ref_m):
-            continue  # formation se termine au mÃªme mois ou après la référence
+            continue  # formation se termine au même mois ou après la référence
 
         cand = {
             "titre": f.get("titre", ""),
@@ -345,7 +345,7 @@ def build_output_row(row: Dict[str, Any], reference_start: datetime) -> Dict[str
          "URL du profil": profile_url or "sans réponse",
 
         # Avant cursus
-        "Qualification d'origine (dernière certification ou diplÃ´me)": (qualif or {}).get("titre", "") or "sans réponse",
+        "Qualification d'origine (dernière certification ou diplome)": (qualif or {}).get("titre", "") or "sans réponse",
         "Dernier métier exercé": dernier_metier or "sans réponse",
         "Nom de l'entreprise si actif occupé": entreprise_si_actif or "sans réponse",
         "Durée de l'expérience précédente (en années)": (exp_before or {}).get("duree_annees", "sans réponse"),
@@ -396,7 +396,7 @@ def main(in_path: Optional[str], out_path: Optional[str], ref_date: Optional[str
     
     out = Path(out_path) if out_path else _default_out()
     out.parent.mkdir(parents=True, exist_ok=True)
-    # Encodage UTF-8-SIG pour ouverture Excel cÃ´té client
+    # Encodage UTF-8-SIG pour ouverture Excel coté client
     df_out.to_csv(out, index=False, encoding="utf-8-sig")
     logger.info("Reporting exporté : %s (référence=%s)", out, reference_start.strftime("%Y-%m"))
     return out

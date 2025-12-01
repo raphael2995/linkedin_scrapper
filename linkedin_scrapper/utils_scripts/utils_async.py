@@ -2,7 +2,7 @@
 """
 Utilitaire simple et efficace pour exécuter une coroutine asyncio depuis du code
 synchrone, compatible scripts et environnements interactifs (Jupyter/Spyder),
-avec prise en charge fiable de Windows (sousâ€‘processus).
+avec prise en charge fiable de Windows (sous-processus).
 
 Usage
 -----
@@ -25,7 +25,7 @@ def run_coro(coro: Coroutine[Any, Any, Any]) -> Any:
     """Exécute la coroutine *coro* et retourne son résultat.
 
     - S'il n'y a PAS de boucle en cours : utilise `asyncio.run`.
-    - S'il y a DÃ‰JÃ€ une boucle (Jupyter/Spyder) : lance une boucle dédiée dans
+    - S'il y a DEJA une boucle (Jupyter/Spyder) : lance une boucle dédiée dans
       un thread séparé (Proactor sous Windows).
     """
     try:
@@ -64,7 +64,7 @@ def run_coro(coro: Coroutine[Any, Any, Any]) -> Any:
 
 
 def _ensure_windows_proactor_policy() -> None:
-    """Force la politique Proactor sous Windows pour fiabiliser les sousâ€‘processus."""
+    """Force la politique Proactor sous Windows pour fiabiliser les sous-processus."""
     if not sys.platform.startswith("win"):
         return
     policy_cls = getattr(asyncio, "WindowsProactorEventLoopPolicy", None)

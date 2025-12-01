@@ -21,7 +21,7 @@ Exemple d'utilisation :
         user_agent=USER_AGENT,
         locale="fr-FR",
         timezone_id="Europe/Paris",
-        # wait_mode="timeout", login_timeout_s=300  # â† si tu veux l'ancien mode
+        # wait_mode="timeout", login_timeout_s=300  # 
     )
     if not logged:
         raise RuntimeError("Session LinkedIn indisponible.")
@@ -53,9 +53,9 @@ def _looks_logged_in(page: Page) -> bool:
     return "linkedin.com/feed" in (page.url or "")
 
 
-async def _wait_for_user_enter(prompt: str = "â†©ï¸Ž Appuie sur Entrée quand la connexion LinkedIn est faiteâ€¦") -> None:
+async def _wait_for_user_enter(prompt: str = "Appuie sur Entrée quand la connexion LinkedIn est faite...") -> None:
     """
-    Attend une validation clavier cÃ´té console SANS bloquer l'event loop.
+    Attend une validation clavier coté console SANS bloquer l'event loop.
     (input() est bloquant : on le déporte dans un executor.)
     """
     loop = asyncio.get_running_loop()
@@ -97,7 +97,7 @@ async def ensure_session(
 
     1) Tente d'accéder à /feed : si déjà connecté → succès immédiat.
     2) Sinon va sur /login et attend selon `wait_mode` :
-        - "press_enter" : l'utilisateur se connecte manuellement dans la fenÃªtre,
+        - "press_enter" : l'utilisateur se connecte manuellement dans la fenêtre,
           puis appuie sur Entrée dans la console. Vérification qu'on est bien sur /feed.
         - "timeout" : attend jusqu'à `login_timeout_s` secondes que l'URL corresponde à /feed.
 
@@ -115,7 +115,7 @@ async def ensure_session(
             # On tolère que la page n'atteigne pas "load" complet
             pass
         if _looks_logged_in(page):
-            # Session active → on sauvegarde quand mÃªme pour rafraichir
+            # Session active → on sauvegarde quand même pour rafraichir
             await _save_storage_state_if_possible(page, storage_state_path)
             return True, page
     except Exception:
@@ -132,7 +132,7 @@ async def ensure_session(
     if wait_mode == "press_enter":
         # === Mode manuel : l'utilisateur a le temps qu'il veut ===
         logger.info("Connexion LinkedIn requise (mode manuel).")
-        logger.info("Fais le login dans la fenÃªtre (mdp, 2FA, captcha si besoin).")
+        logger.info("Fais le login dans la fenêtre (mdp, 2FA, captcha si besoin).")
 
         while True:
             # invite utilisateur en console (affichage + attente)
@@ -153,9 +153,9 @@ async def ensure_session(
                     await _save_storage_state_if_possible(page, storage_state_path)
                     return True, page
 
-                logger.warning("Pas encore sur /feed. Termine la connexion dans la fenÃªtre, puis ré-appuie sur Entrée.")
+                logger.warning("Pas encore sur /feed. Termine la connexion dans la fenêtre, puis ré-appuie sur Entrée.")
             except Exception as e:
-                logger.error("Vérification de session: %s. Ré-appuie sur Entrée quand prÃªt.", e, exc_info=True)
+                logger.error("Vérification de session: %s. Ré-appuie sur Entrée quand prêt.", e, exc_info=True)
 
     else:
         # === Mode timeout : on attend jusqu'à N secondes ===

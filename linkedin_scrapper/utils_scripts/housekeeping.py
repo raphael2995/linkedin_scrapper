@@ -55,7 +55,7 @@ def purge_old_files(
                     pass
 
             if removed:
-                logger.info("[cleanup] %s â€¢ pattern '%s' → %d fichier(s) supprimé(s)", base, pattern, removed)
+                logger.info("[cleanup] %s - pattern '%s' → %d fichier(s) supprimé(s)", base, pattern, removed)
 
 
 def _fmt_size(n: int) -> str:

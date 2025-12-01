@@ -1,8 +1,8 @@
 ﻿# -*- coding: utf-8 -*-
 """
-Pipeline automatisée de recherche d’URL LinkedIn (Ã‰tape 1).
+Pipeline automatisée de recherche d’URL LinkedIn (Etape 1).
 
-Ã‰tapes :
+Etapes :
 1) Google mode 1 : "site:linkedin.com/in {nom} datascientest"
    → filtrage par similarité (seuil 0.90)
 
@@ -11,16 +11,16 @@ Pipeline automatisée de recherche d’URL LinkedIn (Ã‰tape 1).
    → filtrage par similarité (seuil 0.90)
 
 3) LinkedIn internal search : mode 3 = "{nom} datascientest"
-   ET 4 = "{nom} {keywords}" ENCHAÃŽNÃ‰S DANS LA MÃŠME SESSION
+   ET 4 = "{nom} {keywords}" ENCHAINES DANS LA MEME SESSION
    via entry_batch_modes_3_then_4 (avec pause longue intégrée)
-   → filtrage par similarité (seuil 0.90 pour les â€œvalidâ€)
+   → filtrage par similarité (seuil 0.90 pour les "valid")
 
 Sélection finale :
-- Si un nom a une URL avec score â‰¥ 0.90 sur l’une des étapes, on garde la 1Ê³áµ‰ trouvée
+- Si un nom a une URL avec score ≥ 0.90 sur l’une des étapes, on garde la 1Ê³áµ‰ trouvée
   dans l’ordre de priorité : étape 1 → 2 → 3 → 4.
-- Sinon, on regarde toutes ses propositions â‰¥ 0.70 (toutes étapes confondues)
+- Sinon, on regarde toutes ses propositions ≥ 0.70 (toutes étapes confondues)
   et on prend la meilleure.
-- Si aucune proposition â‰¥ 0.70, on renvoie URL vide et status "no_confident_match".
+- Si aucune proposition ≥ 0.70, on renvoie URL vide et status "no_confident_match".
 
 Sortie :
 - CSV final dans data/outputs/step1/ (par défaut) contenant les colonnes d’entrée + URL + status + score.
@@ -45,7 +45,7 @@ from linkedin_scrapper.session_settings import STEP1_DIR, TEMP_STEP1_DIR, timest
 # Orchestration async
 from linkedin_scrapper.utils_scripts.utils_async import run_coro
 
-# Ã‰tape 1 â€“ workers
+# Etape 1 - workers
 from linkedin_scrapper.step1_urls_finder import google_searcher as gs
 from linkedin_scrapper.step1_urls_finder.linkedin_urls_filter import split_df_by_confidence
 from linkedin_scrapper.step1_urls_finder.linkedin_searcher import entry_batch_modes_3_then_4
@@ -97,7 +97,7 @@ def _ensure_input(df: pd.DataFrame) -> pd.DataFrame:
 # --------------------------
 def run_google_search(query_mode: int, input_df: pd.DataFrame, temp_csv_path: Path) -> pd.DataFrame:
     """
-    Ã‰crit un CSV temporaire pour google_searcher, exécute gs.main(query_mode, csv),
+    Ecrit un CSV temporaire pour google_searcher, exécute gs.main(query_mode, csv),
     retourne un DataFrame résultats (au moins colonnes: nom / URL).
     """
     temp_csv_path.parent.mkdir(parents=True, exist_ok=True)
@@ -160,8 +160,8 @@ def _prioritized_merge(
 ) -> pd.DataFrame:
     """
     Construit le DataFrame final avec priorité :
-      1) URLs â‰¥ 0.90 de l’étape 1, puis 2, puis 3, puis 4.
-      2) Sinon, meilleure URL â‰¥ 0.70 (toutes étapes confondues).
+      1) URLs ≥ 0.90 de l’étape 1, puis 2, puis 3, puis 4.
+      2) Sinon, meilleure URL ≥ 0.70 (toutes étapes confondues).
       3) Sinon, pas d’URL (status no_confident_match).
     """
     final_map: dict[str, dict] = {}
@@ -187,7 +187,7 @@ def _prioritized_merge(
     _apply_valid(valid3, 3)
     _apply_valid(valid4, 4)
 
-    # 2) fallback â‰¥ 0.70 si rien encore
+    # 2) fallback ≥ 0.70 si rien encore
     if not fallback_candidates.empty:
         fb_sorted = (
             fallback_candidates
@@ -208,7 +208,7 @@ def _prioritized_merge(
                 "source_step": step_idx,
             }
 
-    # 3) Compléter avec â€œpas d’URLâ€
+    # 3) Compléter avec "pas d’URL"
     rows = []
     for row in df_in.itertuples(index=False):
         nom = getattr(row, NAME_COLUMN)
@@ -235,10 +235,10 @@ def pipeline(input_csv: Path, out_csv: Optional[Path], save_steps: bool) -> Path
     """
     Pipeline principal :
     - charge l'entrée (nom, keywords)
-    - Google mode 1 + filtrage (â‰¥ 0.90)
-    - Google mode 2 pour les restants + filtrage (â‰¥ 0.90)
-    - LinkedIn modes 3 puis 4 DANS LA MÃŠME SESSION + filtrage (â‰¥ 0.90)
-    - sélection finale : priorité 1→2→3→4 ; sinon meilleur â‰¥ 0.70 ; sinon pas d’URL
+    - Google mode 1 + filtrage (≥ 0.90)
+    - Google mode 2 pour les restants + filtrage (≥ 0.90)
+    - LinkedIn modes 3 puis 4 DANS LA MEME SESSION + filtrage (≥ 0.90)
+    - sélection finale : priorité 1→2→3→4 ; sinon meilleur ≥ 0.70 ; sinon pas d’URL
     - sauvegarde le CSV final (data/outputs/step1/)
     """
     # 0) Charger l’entrée
@@ -293,7 +293,7 @@ def pipeline(input_csv: Path, out_csv: Optional[Path], save_steps: bool) -> Path
         doubtful3 = pd.DataFrame(columns=[NAME_COLUMN, "URL", "score_3"])
         doubtful4 = pd.DataFrame(columns=[NAME_COLUMN, "URL", "score_4"])
     else:
-        logger.info("[RECHERCHE 3 & 4] LinkedIn internal search â€” modes 3 puis 4 (mÃªme session)")
+        logger.info("[RECHERCHE 3 & 4] LinkedIn internal search -” modes 3 puis 4 (même session)")
         li3_raw, li4_raw = run_coro(entry_batch_modes_3_then_4(remaining2))
         if li3_raw is None:
             li3_raw = pd.DataFrame(columns=[NAME_COLUMN, "URL"])
@@ -314,13 +314,13 @@ def pipeline(input_csv: Path, out_csv: Optional[Path], save_steps: bool) -> Path
             save_intermediate(doubtful4, "linkedin_mode4_doubtful")
 
     # ----- Sélection finale -----
-    # (a) Candidats â€œvalidâ€ â‰¥ 0.90
+    # (a) Candidats "valid" ≥ 0.90
     v1 = _add_unified_score(valid1, 1)
     v2 = _add_unified_score(valid2, 2)
     v3 = _add_unified_score(valid3, 3)
     v4 = _add_unified_score(valid4, 4)
 
-    # (b) Fallback : tous â€œdoubtfulâ€ â‰¥ 0.70
+    # (b) Fallback : tous "doubtful" ≥ 0.70
     fb_list: List[pd.DataFrame] = []
     for step_idx, ddf in [(1, doubtful1), (2, doubtful2), (3, doubtful3), (4, doubtful4)]:
         if ddf is None or ddf.empty:
@@ -349,7 +349,7 @@ def pipeline(input_csv: Path, out_csv: Optional[Path], save_steps: bool) -> Path
 # CLI
 # --------------------------
 def main():
-    parser = argparse.ArgumentParser(description="Ã‰tape 1 â€” pipeline de recherche d’URLs LinkedIn.")
+    parser = argparse.ArgumentParser(description="Etape 1 -” pipeline de recherche d’URLs LinkedIn.")
     parser.add_argument("--csv", type=str, required=True, help="Chemin du CSV d'entrée (colonnes: nom[, keywords]).")
     parser.add_argument("--out", type=str, default=None, help="Chemin du CSV de sortie (optionnel).")
     parser.add_argument("--save-intermediate", action="store_true", help="Sauvegarder les étapes intermédiaires.")
